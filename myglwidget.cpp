@@ -84,8 +84,8 @@ void MyGLWidget::setList() {
 	glVertex3f(1.0f, -1.0f, 1.0f);                  //右下(前面)  
 	glNormal3f(1.0f, 1.0f, 1.0f);                   //右上(前面)  
 	glNormal3f(-1.0f, 1.0f, 1.0f);                  //左上(前面)  
-	glVertex3f(-1.0f, -1.0f, 1.0f);                 //左下(前面)  
-	glVertex3f(1.0f, -1.0f, 1.0f);                  //右下(前面)
+	glNormal3f(-1.0f, -1.0f, 1.0f);                 //左下(前面)  
+	glNormal3f(1.0f, -1.0f, 1.0f);                  //右下(前面)
 
 	glVertex3f(1.0f, -1.0f, -1.0f);                 //右上(后面)  
 	glVertex3f(-1.0f, -1.0f, -1.0f);                //左上(后面)  
@@ -103,6 +103,10 @@ void MyGLWidget::setList() {
 	glVertex3f(1.0f, 1.0f, 1.0f);                   //左上(右面)  
 	glVertex3f(1.0f, -1.0f, 1.0f);                  //左下(右面)  
 	glVertex3f(1.0f, -1.0f, -1.0f);                 //右下(右面)  
+	glNormal3f(1.0f, 1.0f, -1.0f);                  //右上(右面)  
+	glNormal3f(1.0f, 1.0f, 1.0f);                   //左上(右面)  
+	glNormal3f(1.0f, -1.0f, 1.0f);                  //左下(右面)  
+	glNormal3f(1.0f, -1.0f, -1.0f);                 //右下(右面)  
 	glEnd();
 	glEndList();
 
@@ -113,6 +117,10 @@ void MyGLWidget::setList() {
 	glVertex3f(-0.5f, 0.5f, -0.5f);                 //左上(顶面)  
 	glVertex3f(-0.5f, 0.5f, 0.5f);                  //左下(顶面)  
 	glVertex3f(0.5f, 0.5f, 0.5f);                   //右下(顶面)  
+	glNormal3f(0.5f, 0.5f, -0.5f);                  //右上(顶面)  
+	glNormal3f(-0.5f, 0.5f, -0.5f);                 //左上(顶面)  
+	glNormal3f(-0.5f, 0.5f, 0.5f);                  //左下(顶面)  
+	glNormal3f(0.5f, 0.5f, 0.5f);                   //右下(顶面)
 
 
 	glVertex3f(0.5f, -0.5f, 0.5f);                  //右上(底面)  
@@ -153,16 +161,16 @@ void MyGLWidget::paintGL() {
 
 	for (iter = cubeList.begin(); iter != cubeList.end(); iter++) {
 
-		GLfloat mat_ambient[] = { rand() % 3 + 0.1,rand() % 3 + 0.1,rand() % 3 + 0.1,1.0 };
-		GLfloat mat_diffuse[] = { rand() % 3 + 0.1,rand() % 3 + 0.1,rand() % 3 + 0.1,1.0 };
-		//	GLfloat mat_specular[] = { 1.0, 0.0, 1.0,1.0 };
-		GLfloat mat_shininess[] = { 50.0 };
+		GLfloat mat_ambient[] = { iter->GetColor(0), iter->GetColor(1), iter->GetColor(2), 1.0 };
+		GLfloat mat_diffuse[] = { iter->GetColor(0), iter->GetColor(1), iter->GetColor(2), 1.0 };
+		GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+		GLfloat mat_shininess[] = { 5.0 };
 
-		GLfloat light_position[] = { 1.0, 1.0, 1.0,0.0 };
+		GLfloat light_position[] = { 1.0, 0.0, 1.0,0.0 };
 
 		glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-		//	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
 		JumpCubeClass tCube = *iter;
@@ -174,6 +182,7 @@ void MyGLWidget::paintGL() {
 
 		glCallList(m_box);
 	}
+
 	glLoadIdentity();
 	gluLookAt(-1, 3, 5, 0.0, 0, 0, 0, 1, 0);
 	glRotatef(30, 0.0f, 1.0f, 0.0f);
@@ -241,7 +250,7 @@ void  MyGLWidget::keyReleaseEvent(QKeyEvent* eventt) {
 				}
 				else {
 					if (((jumper->posX - cubeList.at(cubeCount + 1).posX) <= 1 && (jumper->posX - cubeList.at(cubeCount + 1).posX) > 0) || ((cubeList.at(cubeCount + 1).posX - jumper->posX) <= 1) && (cubeList.at(cubeCount + 1).posX - jumper->posX) > 0) {
-						//float test = cubeList.at(cubeCount + 1).posX;
+						
 						onOrDrop = false;
 						cubeCount++;
 						JumpCubeClass last = cubeList.at(cubeList.size() - 1);
