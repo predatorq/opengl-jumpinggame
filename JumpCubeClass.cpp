@@ -1,6 +1,12 @@
 #include "JumpCubeClass.h"
 #include<ctime>
 
+/*###################################################
+##  函数: JumpCubeClass
+##  函数描述：给定颜色初始化方块颜色
+##  参数描述：
+##		*Color RGB三个颜色分量的数组
+#####################################################*/
 JumpCubeClass::JumpCubeClass(GLfloat* Color){
 	if (Color == nullptr){
 		this->color[0] = 1.0;
@@ -13,10 +19,23 @@ JumpCubeClass::JumpCubeClass(GLfloat* Color){
 	}
 }
 
+/*###################################################
+##  函数: GetColor
+##  函数描述：返回RGB颜色的分量
+##  参数描述：
+##		index 指定返回的分量是R、G、B的哪一个
+#####################################################*/
 GLfloat JumpCubeClass::GetColor(int index){
 	return this->color[index];
 }
 
+/*###################################################
+##  函数: ranPOS
+##  函数描述：给定当前方块的位置，生成下一个方块的位置
+##  参数描述：
+##		x 当前方块在x轴的位置
+##		z 当前方块在z轴的位置
+#####################################################*/
 void JumpCubeClass::ranPOS(int x, int z) {
 	srand((unsigned)time(NULL));
 	int xOrz = rand() % 2;

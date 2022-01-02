@@ -97,7 +97,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;..\glew-2.1.0\include;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtOpenGL;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtWidgets;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtGui;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtANGLE;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtCore;debug;/include;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\glm;.;..\glew-2.1.0\include;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtOpenGL;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtWidgets;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtGui;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtANGLE;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtCore;debug;/include;C:\Users\predator\Downloads\eigen-3.4.0;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -155,6 +155,7 @@
     <ClCompile Include="debug\moc_myglwidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="objUtils.cpp" />
     <ClCompile Include="release\moc_myglwidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -178,6 +179,7 @@
   <ItemGroup>
     <ClInclude Include="JumpAbleClass.h" />
     <ClInclude Include="JumpCubeClass.h" />
+    <ClInclude Include="objUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

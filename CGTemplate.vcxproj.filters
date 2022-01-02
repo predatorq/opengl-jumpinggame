@@ -39,6 +39,9 @@
     <ClCompile Include="JumpCubeClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="objUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="myglwidget.h">
@@ -64,6 +67,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JumpCubeClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="objUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,14 +13,29 @@
 #include <QKeyEvent>
 #include "JumpCubeClass.h"
 #include "JumpAbleClass.h"
+#include "objUtils.h"
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
 
 
 using namespace std;
 
+
 class JumpCubeClass;
 class JumpAbleClass;
+class Loader;
 
+class ObjLoader {
+public:
+	ObjLoader(string filename);//构造函数
+	void Draw();//绘制函数
+private:
+	vector<vector<GLfloat>>vSets;//存放顶点(x,y,z)坐标
+	vector<vector<GLint>>fSets;//存放面的三个顶点索引
+};
 
 class MyGLWidget : public QOpenGLWidget{
 	Q_OBJECT
@@ -47,6 +62,11 @@ private:
 	vector<JumpCubeClass> cubeList;
 	vector<JumpCubeClass>::iterator iter;
 	JumpAbleClass* jumper;
+	string filePath;
+	vector<Vertex> obj;
 
 };
+
+
+
 #endif // MYGLWIDGET_H
