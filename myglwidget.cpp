@@ -1,132 +1,78 @@
 #include "MyGLWidget.h"
+//#include "SOIL.h"
 
-/*###################################################
-##  函数: 
-##  函数描述：
-##  参数描述：
-#####################################################*/
-
-ObjLoader::ObjLoader(string filename)
+GLuint loadBMP_custom(const char* imagepath)
 {
-	ifstream file(filename);
-	string line;
-	while (getline(file, line))
+	// Data read from the header of the BMP file
+	unsigned char header[54]; // Each BMP file begins by a 54-bytes header
+	unsigned int dataPos;     // Position in the file where the actual data begins
+	unsigned int width, height;
+	unsigned int imageSize;   // = width*height*3
+	// Actual RGB data
+	unsigned char* data;
+	// Open the file
+	FILE* file = fopen(imagepath, "rb");
+	if (!file)
 	{
-		if (line.substr(0, 2) == "vt")
-		{
-
-		}
-		else if (line.substr(0, 2) == "vn")
-		{
-
-		}
-		else if (line.substr(0, 1) == "v")
-		{
-			vector<GLfloat> Point;
-			GLfloat x, y, z;
-			istringstream s(line.substr(2));
-			s >> x; s >> y; s >> z;
-			Point.push_back(x);
-			Point.push_back(y);
-			Point.push_back(z);
-			vSets.push_back(Point);
-
-		}
-		else if (line.substr(0, 1) == "f")
-		{
-			vector<GLint> vIndexSets;
-			GLint u, v, w;
-			istringstream vtns(line.substr(2));
-			vtns >> u; vtns >> v; vtns >> w;
-			vIndexSets.push_back(u - 1);
-			vIndexSets.push_back(v - 1);
-			vIndexSets.push_back(w - 1);
-			fSets.push_back(vIndexSets);
-		}
-		else if (line.substr(0, 1) == "#")
-		{
-
-		}
-		else
-		{
-
-		}
+		printf("Image could not be openedn");
+		return 0;
 	}
-	file.close();
+	if (fread(header, 1, 54, file) != 54) { // If not 54 bytes read : problem
+		printf("Not a correct BMP filen");
+		return false;
+	}
+	if (header[0] != 'B' || header[1] != 'M') {
+		printf("Not a correct BMP filen");
+		return 0;
+	}
+	// Read ints from the byte array
+	dataPos = *(int*)&(header[0x0A]);
+	imageSize = *(int*)&(header[0x22]);
+	width = *(int*)&(header[0x12]);
+	height = *(int*)&(header[0x16]);
+	// Some BMP files are misformatted, guess missing information
+	if (imageSize == 0)    imageSize = width * height * 3; // 3 : one byte for each Red, Green and Blue component
+	if (dataPos == 0)      dataPos = 54; // The BMP header is done that way
+	// Create a buffer
+	data = new unsigned char[imageSize];
+
+	// Read the actual data from the file into the buffer
+	fread(data, 1, imageSize, file);
+
+	//Everything is in memory now, the file can be closed
+	fclose(file);
+	// Create one OpenGL texture
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	// Give the image to OpenGL
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	return textureID;
 }
 
-
-
-void ObjLoader::Draw() {
-	//glBegin(GL_LINES);
-	//for (int i = 0, num = F.size(); i < num; ++i) {
-	//	for (int j = 0, n = F[i].size(); j < n; ++j) {
-	//		glVertex3dv(V[F[i][j]].data());
-	//		glVertex3dv(V[F[i][(j + 1) % n]].data());
-	//	}
-	//}
-	//glEnd();
-
-	glBegin(GL_TRIANGLES);//开始绘制
-	for (int i = 0; i < fSets.size(); i++) {
-		GLfloat VN[3];
-		//三个顶点
-		GLfloat SV1[3];
-		GLfloat SV2[3];
-		GLfloat SV3[3];
-
-		if ((fSets[i]).size() != 3) {
-			cout << "the fSetsets_Size is not correct" << endl;
-		}
-		else {
-			GLint firstVertexIndex = (fSets[i])[0];//取出顶点索引
-			GLint secondVertexIndex = (fSets[i])[1];
-			GLint thirdVertexIndex = (fSets[i])[2];
-
-			SV1[0] = (vSets[firstVertexIndex])[0];//第一个顶点
-			SV1[1] = (vSets[firstVertexIndex])[1];
-			SV1[2] = (vSets[firstVertexIndex])[2];
-
-			SV2[0] = (vSets[secondVertexIndex])[0]; //第二个顶点
-			SV2[1] = (vSets[secondVertexIndex])[1];
-			SV2[2] = (vSets[secondVertexIndex])[2];
-
-			SV3[0] = (vSets[thirdVertexIndex])[0]; //第三个顶点
-			SV3[1] = (vSets[thirdVertexIndex])[1];
-			SV3[2] = (vSets[thirdVertexIndex])[2];
-
-
-			GLfloat vec1[3], vec2[3], vec3[3];//计算法向量
-			//(x2-x1,y2-y1,z2-z1)
-			vec1[0] = SV1[0] - SV2[0];
-			vec1[1] = SV1[1] - SV2[1];
-			vec1[2] = SV1[2] - SV2[2];
-
-			//(x3-x2,y3-y2,z3-z2)
-			vec2[0] = SV1[0] - SV3[0];
-			vec2[1] = SV1[1] - SV3[1];
-			vec2[2] = SV1[2] - SV3[2];
-
-			//(x3-x1,y3-y1,z3-z1)
-			vec3[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
-			vec3[1] = vec2[0] * vec1[2] - vec2[2] * vec1[0];
-			vec3[2] = vec2[1] * vec1[0] - vec2[0] * vec1[1];
-
-			GLfloat D = sqrt(pow(vec3[0], 2) + pow(vec3[1], 2) + pow(vec3[2], 2));
-
-			VN[0] = vec3[0] / D;
-			VN[1] = vec3[1] / D;
-			VN[2] = vec3[2] / D;
-
-			glNormal3f(VN[0], VN[1], VN[2]);//绘制法向量
-
-			glVertex3f(SV1[0], SV1[1], SV1[2]);//绘制三角面片
-			glVertex3f(SV2[0], SV2[1], SV2[2]);
-			glVertex3f(SV3[0], SV3[1], SV3[2]);
-		}
-	}
+void Background(GLuint texture)
+{
+	glBindTexture(GL_TEXTURE_2D, texture);
+	const int iw = 10;
+	const int ih = 10;
+	glPushMatrix();
+	glTranslatef(-iw / 2, -ih / 2, 0);
+	glBegin(GL_QUADS);
+	glTexCoord2d(0.0, 0.0); glVertex2i(0, 0);
+	glTexCoord2d(1.0, 0.0); glVertex2i(iw, 0);
+	glTexCoord2d(1.0, 1.0); glVertex2i(iw, ih);
+	glTexCoord2d(0.0, 1.0); glVertex2i(0, ih);
 	glEnd();
+	glPopMatrix();
+	return;
 }
+
 
 /*###################################################
 ##  函数: MyGLWidget
@@ -138,11 +84,26 @@ MyGLWidget::MyGLWidget(QWidget* parent)
 	: QOpenGLWidget(parent)
 {
 	jumper = new JumpAbleClass();
+	jumper->color[0] = 0.5;
+	jumper->color[1] = 0.5;
+	jumper->color[2] = 0.5;
+	//texture = LoadTexture("2.jpg", 512, 512);
 	ifstream ifile("chess.obj");
 	obj = LoadOBJ(ifile);
 	int count = 0;
+	GLfloat color[3];
+	srand((unsigned)time(NULL));
 	for (int i = 0; i < 4; i++) { //初始化四个方块
-		JumpCubeClass temp;
+		for (int i = 0; i < 3; i++) {
+			color[i] = (float)rand()/255.0;
+			int temp = (int)color[i];
+			color[i] -= temp;
+			if (color[i] > 0.8)
+				color[i] -= 0.1;
+			if (color[i] < 0.2)
+				color[i] += 0.1;
+		}
+		JumpCubeClass temp(color);
 		temp.posX = count + 4;
 		temp.posZ = 0;
 		count += 4;
@@ -282,37 +243,67 @@ void MyGLWidget::setList() {
 ##  参数描述：无
 #####################################################*/
 void MyGLWidget::paintGL() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //清除屏幕和深度缓存  
+	glClearColor(0.85f, 1.0f, 0.75f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //清除屏幕和深度缓存 
+	//glDisable(GL_DEPTH_TEST);
+	//
+	//glEnable(GL_TEXTURE_2D);
+	//glLoadIdentity();
+	//Background(this->texture);					//背景方块
+
+	glEnable(GL_DEPTH_TEST);
+
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 5.0 };
+	GLfloat light_position[] = { 1.0, 0.0, 1.0,0.0 };
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	float scale1f = ss / 15;
+	if (scale1f > 0.5)
+		scale1f = 0.5;
+
+
+
 
 	for (iter = cubeList.begin(); iter != cubeList.end(); iter++) {
 
 		GLfloat mat_ambient[] = { iter->GetColor(0), iter->GetColor(1), iter->GetColor(2), 1.0 };
 		GLfloat mat_diffuse[] = { iter->GetColor(0), iter->GetColor(1), iter->GetColor(2), 1.0 };
-		GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-		GLfloat mat_shininess[] = { 5.0 };
-
-		GLfloat light_position[] = { 1.0, 0.0, 1.0,0.0 };
 
 		glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
 		JumpCubeClass tCube = *iter;
 		glLoadIdentity();
 		gluLookAt(-1, 3, 5, 0.0, 0, 0, 0, 1, 0);
 		glRotatef(30, 0.0f, 1.0f, 0.0f);
-		glTranslatef(tCube.posX - 6, 0, tCube.posZ);
+		
 		glTranslatef(-offsetX, 0, -offsetZ);
-
+		if (cubeList.at(this->cubeCount).posX == tCube.posX && cubeList.at(cubeCount).posZ == tCube.posZ) {
+			glTranslatef(tCube.posX - 6, -scale1f, tCube.posZ);
+			glScalef(1.0, 1.0 - scale1f, 1.0);
+		}
+		else {
+			glTranslatef(tCube.posX - 6, 0., tCube.posZ);
+			glScalef(1.0, 1.0, 1.0);
+		}
 		glCallList(m_box);
 	}
+
+	GLfloat mat_ambient[] = { jumper->color[0], jumper->color[1], jumper->color[2], 1.0 };
+	GLfloat mat_diffuse[] = { jumper->color[0], jumper->color[1], jumper->color[2], 1.0 };
+
+
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+
 
 	glLoadIdentity();
 	gluLookAt(-1, 3, 5, 0.0, 0, 0, 0, 1, 0);
 	glRotatef(30, 0.0f, 1.0f, 0.0f);
-	glTranslatef(jumper->posX - 6, jumper->posY, jumper->posZ);
+	glTranslatef(jumper->posX - 6, jumper->posY - 2*scale1f, jumper->posZ);
 	glTranslatef(-offsetX, 0, -offsetZ);
+	glScalef(1.0, 1.0 - scale1f, 1.0);
 
 	glCallList(s_box);
 
@@ -327,6 +318,7 @@ void  MyGLWidget::keyPressEvent(QKeyEvent* eventt) {
 	switch (eventt->key()) {
 	case Qt::Key_K:
 		ss += float(0.2);
+		update();
 		break;
 	}
 }
@@ -352,6 +344,7 @@ void  MyGLWidget::keyReleaseEvent(QKeyEvent* eventt) {
 		if (!eventt->isAutoRepeat()) {
 			onJump = true;
 			float xOrZSpeed = ss / 10;
+			ss = 0;
 			if (xOrZSpeed > 0.5) {
 				xOrZSpeed = 0.5f;
 			}
@@ -382,11 +375,13 @@ void  MyGLWidget::keyReleaseEvent(QKeyEvent* eventt) {
 				if ((jumper->posX - cubeList.at(cubeCount).posX) <= 1) {
 
 					onOrDrop = false;
+					score++;
 				}
 				else {
 					if (((jumper->posX - cubeList.at(cubeCount + 1).posX) <= 1 && (jumper->posX - cubeList.at(cubeCount + 1).posX) > 0) || ((cubeList.at(cubeCount + 1).posX - jumper->posX) <= 1) && (cubeList.at(cubeCount + 1).posX - jumper->posX) > 0) {
 						
 						onOrDrop = false;
+						score++;
 						cubeCount++;
 						JumpCubeClass last = cubeList.at(cubeList.size() - 1);
 						JumpCubeClass newCube;
@@ -395,16 +390,19 @@ void  MyGLWidget::keyReleaseEvent(QKeyEvent* eventt) {
 					}
 					else {
 						onOrDrop = true;
+						score--;
 					}
 				}
 			}
 			else {
 				if ((jumper->posZ - cubeList.at(cubeCount).posZ) <= 1) {
 					onOrDrop = false;
+					score++;
 				}
 				else {
 					if (((jumper->posZ - cubeList.at(cubeCount + 1).posZ) <= 1 && (jumper->posZ - cubeList.at(cubeCount + 1).posZ) > 0) || ((cubeList.at(cubeCount + 1).posZ - jumper->posZ) <= 1) && (cubeList.at(cubeCount + 1).posZ - jumper->posZ) > 0) {
 						onOrDrop = false;
+						score++;
 						cubeCount++;
 						JumpCubeClass last = cubeList.at(cubeList.size() - 1);
 						JumpCubeClass newCube;
@@ -413,6 +411,7 @@ void  MyGLWidget::keyReleaseEvent(QKeyEvent* eventt) {
 					}
 					else {
 						onOrDrop = true;
+						score--;
 					}
 				}
 			}

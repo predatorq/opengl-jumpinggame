@@ -114,7 +114,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Glu32.lib;OpenGL32.lib;C:\Users\predator\Downloads\glew-2.1.0-win32 (1)\glew-2.1.0\lib\Release\x64\glew32.lib;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5OpenGLd.lib;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Widgetsd.lib;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Guid.lib;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>E:\opengl-hw\soil\projects\VC9\Debug\SOIL.lib;Glu32.lib;OpenGL32.lib;C:\Users\predator\Downloads\glew-2.1.0-win32 (1)\glew-2.1.0\lib\Release\x64\glew32.lib;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5OpenGLd.lib;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Widgetsd.lib;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Guid.lib;C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>

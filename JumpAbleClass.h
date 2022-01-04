@@ -8,6 +8,8 @@ public:
 	JumpAbleClass() {}
 	~JumpAbleClass() {}
 
+	GLfloat color[3];
+
 	void jump(float x, float z);
 	float posX = 4;
 	float posZ = 0;

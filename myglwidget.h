@@ -10,6 +10,9 @@
 #include <QtGui>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#include <QOpenGLExtraFunctions>
+#include <QOpenGLFunctions_4_3_Core>
+#include <QOpenGLShaderProgram>
 #include <QKeyEvent>
 #include "JumpCubeClass.h"
 #include "JumpAbleClass.h"
@@ -26,16 +29,6 @@ using namespace std;
 
 class JumpCubeClass;
 class JumpAbleClass;
-class Loader;
-
-class ObjLoader {
-public:
-	ObjLoader(string filename);//构造函数
-	void Draw();//绘制函数
-private:
-	vector<vector<GLfloat>>vSets;//存放顶点(x,y,z)坐标
-	vector<vector<GLint>>fSets;//存放面的三个顶点索引
-};
 
 class MyGLWidget : public QOpenGLWidget{
 	Q_OBJECT
@@ -64,6 +57,8 @@ private:
 	JumpAbleClass* jumper;
 	string filePath;
 	vector<Vertex> obj;
+	GLuint texture;
+	int score = 0;
 
 };
 

@@ -50,7 +50,13 @@ void JumpCubeClass::ranPOS(int x, int z) {
 		posX = x;
 		posZ = z + rand() % 4 + 3;
 	}
-	for (int i=0;i<3;i++){
-		this->color[i] = (float)(rand() % 3) + (float)0.1;
+	for (int i = 0; i < 3; i++) {
+		color[i] = (float)rand() / 255.0;
+		int temp = (int)color[i];
+		color[i] -= temp;
+		if (color[i] > 0.8)
+			color[i] -= 0.1;
+		if (color[i] < 0.2)
+			color[i] += 0.1;
 	}
 }
