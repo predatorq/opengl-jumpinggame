@@ -4,6 +4,8 @@ Use OpenGL to reproduce a WeChat-like Jump game.
 
 The project is made by VS2019, the sln file is the project main file which can be opened by Visual Studio.
 
+The final project for CG course in SYSU.
+
 ## Description
 
 - Jump is a mini-game on WeChat platform, with single player and multiplayer modes (up to 8 players). The game is played by long pressing the screen to operate the chess to accumulate power to jump, jumping to the platform counts as 1 point, jumping to the middle of the platform, then 2 points for the first time, 4 points for the second time, 6 points for the third time, 8 points for the fourth time, and so on, up to 16 times in a row.
