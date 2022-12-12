@@ -19,13 +19,13 @@ The final project for CG course in SYSU.
 - Illumination model settings:
 
 ```cpp
-    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat mat_shininess[] = { 5.0 };
-	GLfloat light_position[] = { 1.0, 0.0, 1.0,0.0 };
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat mat_shininess[] = { 5.0 };
+GLfloat light_position[] = { 1.0, 0.0, 1.0,0.0 };
+glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 ```
 
 - Chess: import by obj file.
